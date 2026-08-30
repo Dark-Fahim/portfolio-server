@@ -26,7 +26,7 @@ const app = express();
 // CLIENT_URL can contain one or more comma-separated frontend URLs. This keeps
 // local development working while allowing the deployed frontend to call the
 // API from its own origin.
-const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173' || 'https://kamrulhasan-portfolio-info.vercel.app')
+const allowedOrigins = (process.env.CLIENT_URL || 'https://kamrulhasan-portfolio-info.vercel.app')
   .split(',')
   .map((url) => url.trim())
   .filter(Boolean);
