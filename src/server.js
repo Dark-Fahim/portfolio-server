@@ -23,11 +23,26 @@ await connectDB();
 
 const app = express();
 
+// CLIENT_URL can contain one or more comma-separated frontend URLs. This keeps
+// local development working while allowing the deployed frontend to call the
+// API from its own origin.
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+  .split(',')
+  .map((url) => url.trim())
+  .filter(Boolean);
+
 // --- Security & core middleware ---
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin(origin, callback) {
+      // Requests without an Origin header (health checks, server-to-server)
+      // do not need browser CORS protection.
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true,
   })
 );
